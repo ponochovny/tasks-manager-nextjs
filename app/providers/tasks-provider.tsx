@@ -1,38 +1,91 @@
 'use client'
 
-import { createContext, useContext } from 'react'
-import { useEffect, useState } from 'react'
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+	useTransition,
+} from 'react'
 import { getTasks } from '@/app/api/tasks.api'
+import { useSearchParams } from 'next/navigation'
+
+export enum Priority {
+	low = 'low',
+	medium = 'medium',
+	high = 'high',
+}
 
 export interface ITask {
 	id: number
 	title: string
 	completed: boolean
-	date: string
+	priority: Priority
+	description: string
+	date_created: string
+	date_completed: string | null
 }
 
 export interface ITasksContext {
 	tasks: ITask[]
 	setTasks: (tasks: ITask[]) => void
+	fetchTasks: () => Promise<void>
+	page?: number | null
+	pagination: {
+		total: number
+		limit: number
+		page: number
+		pages: number
+	}
+	isPending: boolean
 }
 
 export const TasksContext = createContext<ITasksContext>({
 	tasks: [],
 	setTasks: () => {},
+	fetchTasks: async () => {},
+	page: null,
+	pagination: { total: 0, limit: 0, page: 0, pages: 0 },
+	isPending: false,
 })
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
+	const params = useSearchParams()
+	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
+
 	const [tasks, setTasks] = useState<ITask[]>([])
+	const [page, setPage] = useState<number | null>(null)
+	const [pagination, setPagination] = useState<{
+		total: number
+		limit: number
+		page: number
+		pages: number
+	}>({ total: 0, limit: 0, page: 0, pages: 0 })
+	const [isPending, startTransition] = useTransition()
+
+	const fetchTasks = useCallback(async () => {
+		const page = currentPage
+
+		const data = await getTasks(page)
+		setPage(page)
+		setPagination(data.pagination)
+		setTasks(data.data)
+	}, [setPage, setPagination, setTasks, currentPage])
 
 	useEffect(() => {
-		const fetchTasks = async () => {
-			const data = await getTasks()
-			setTasks(data)
-		}
-		fetchTasks()
-	}, [])
+		startTransition(async () => {
+			await fetchTasks()
+		})
+	}, [fetchTasks])
 
-	return <TasksContext value={{ tasks, setTasks }}>{children}</TasksContext>
+	return (
+		<TasksContext
+			value={{ tasks, setTasks, page, pagination, isPending, fetchTasks }}
+		>
+			{children}
+		</TasksContext>
+	)
 }
 
 export const useTasks = () => {

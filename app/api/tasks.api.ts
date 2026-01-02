@@ -1,20 +1,57 @@
-// interface ITask {
-// 	id: number
-// 	title: string
-// 	completed: boolean
-// 	date: string
-// }
+const BASE_URL = 'http://localhost:3001'
 
-export const getTasks = async () => {
-	const res = await fetch('/api/tasks')
+export const getTasks = async (page = 1) => {
+	const res = await fetch(`${BASE_URL}/tasks?_page=${page}&_limit=5`)
+	const data = await res.json()
+	return {
+		data,
+		pagination: {
+			total: 12,
+			limit: 5,
+			page,
+			pages: 3,
+		},
+	}
+}
+
+export const getTaskById = async (taskId: number) => {
+	const res = await fetch(`${BASE_URL}/tasks/${taskId}`)
+	const data = await res.json()
+	return {
+		data,
+	}
+}
+
+export const deleteTaskById = async (taskId: number) => {
+	const res = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+		method: 'DELETE',
+	})
 	return res.json()
 }
 
-// export const createTask = async (task: ITask) => {
-// 	const res = await fetch('/api/tasks', {
-// 		method: 'POST',
-// 		headers: { 'Content-Type': 'application/json' },
-// 		body: JSON.stringify(task),
-// 	})
-// 	return res.json()
-// }
+export const taskCompletedToggle = async (id: number, completed: boolean) => {
+	const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			completed: !completed,
+			date_completed: !completed ? new Date().toISOString() : null,
+		}),
+	})
+	return res.json()
+}
+
+export const taskPriorityChange = async (id: number, priority: string) => {
+	const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			priority,
+		}),
+	})
+	return res.json()
+}

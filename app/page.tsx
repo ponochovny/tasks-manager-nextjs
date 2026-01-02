@@ -1,24 +1,20 @@
 'use client'
 
+import H1 from '@/shared/ui/h1'
 import { useTasks } from './providers/tasks-provider'
+import UiPagination from '@/shared/ui/ui-pagination'
+import TasksList from '@/widgets/tasks-list'
 
 export default function Home() {
-	const { tasks, setTasks } = useTasks()
+	const { pagination, isPending } = useTasks()
 
 	return (
-		<div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-			<main className='flex min-h-screen w-full flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start'>
-				<h1 className='text-5xl font-bold text-zinc-900 dark:text-white sm:text-6xl'>
-					Hello World!
-				</h1>
-				<div className='mt-10 w-full'>
-					<ul>
-						{tasks.map((task) => (
-							<li key={task.id}>{task.title}</li>
-						))}
-					</ul>
-				</div>
-			</main>
-		</div>
+		<>
+			<H1>Tasks {isPending ? '(Loading...)' : ''}</H1>
+			<div className='mt-10 w-full space-y-6'>
+				<TasksList />
+				<UiPagination pagination={pagination} />
+			</div>
+		</>
 	)
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import { TasksProvider } from './providers/tasks-provider'
+import { TasksProvider } from '@/app/providers/tasks-provider'
+import { ThemeProvider } from '@/app/providers/theme-provider'
+import { ModeToggle } from '@/shared/ui/theme-toggle'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -28,7 +30,21 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<TasksProvider>{children}</TasksProvider>
+				<div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
+					<main className='flex min-h-screen w-full flex-col items-center justify-between py-24 px-16 bg-white dark:bg-black sm:items-start'>
+						<ThemeProvider
+							attribute='class'
+							defaultTheme='system'
+							enableSystem
+							disableTransitionOnChange
+						>
+							<div className='absolute top-6 right-6'>
+								<ModeToggle />
+							</div>
+							<TasksProvider>{children}</TasksProvider>
+						</ThemeProvider>
+					</main>
+				</div>
 			</body>
 		</html>
 	)
