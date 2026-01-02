@@ -1,38 +1,38 @@
-import { NextResponse } from 'next/server'
-import { ITask } from '../../providers/tasks-provider'
+// import { NextResponse } from 'next/server'
+// import { ITask } from '../../providers/tasks-provider'
 
-export async function GET() {
-	// const tasks: ITask[] = [
-	// 	{
-	// 		id: 1,
-	// 		title: 'Initial Task',
-	// 		priority: 'medium',
-	// 		description: 'This is the initial task',
-	// 		completed: false,
-	// 		date: new Date().toISOString(),
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		title: 'Second Task',
-	// 		priority: 'high',
-	// 		description: 'This is the second task',
-	// 		completed: true,
-	// 		date: new Date().toISOString(),
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		title: 'Third Task',
-	// 		priority: 'low',
-	// 		description: 'This is the third task',
-	// 		completed: false,
-	// 		date: new Date().toISOString(),
-	// 	},
-	// ]
-	// const tasks: ITask[] = await fetch(
-	// 	'http://localhost:3001/tasks?_page=1&_limit=5'
-	// ).then((res) => res.json())
-	// return NextResponse.json(tasks)
-}
+// export async function GET() {
+// const tasks: ITask[] = [
+// 	{
+// 		id: 1,
+// 		title: 'Initial Task',
+// 		priority: 'medium',
+// 		description: 'This is the initial task',
+// 		completed: false,
+// 		date: new Date().toISOString(),
+// 	},
+// 	{
+// 		id: 2,
+// 		title: 'Second Task',
+// 		priority: 'high',
+// 		description: 'This is the second task',
+// 		completed: true,
+// 		date: new Date().toISOString(),
+// 	},
+// 	{
+// 		id: 3,
+// 		title: 'Third Task',
+// 		priority: 'low',
+// 		description: 'This is the third task',
+// 		completed: false,
+// 		date: new Date().toISOString(),
+// 	},
+// ]
+// const tasks: ITask[] = await fetch(
+// 	'http://localhost:3001/tasks?_page=1&_limit=5'
+// ).then((res) => res.json())
+// return NextResponse.json(tasks)
+// }
 
 // export async function PATCH(
 // 	request: Request,
