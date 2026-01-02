@@ -3,17 +3,27 @@
 import { deleteTaskById } from '@/app/api/tasks.api'
 import { useTasks } from '@/app/providers/tasks-provider'
 import { Button } from '@/shared/ui/button'
+import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 
-const DeleteTaskButton = ({ taskId }: { taskId: number }) => {
+const DeleteTaskButton = ({
+	taskId,
+	isRefetch = true,
+	redirect = '/',
+}: {
+	taskId: number
+	isRefetch?: boolean
+	redirect?: string
+}) => {
 	const [isPending, startTransition] = useTransition()
 	const { fetchTasks } = useTasks()
+	const router = useRouter()
 
 	const handleDelete = () => {
 		startTransition(async () => {
-			await deleteTaskById(taskId).then(() => {
-				fetchTasks()
-			})
+			await deleteTaskById(taskId)
+			if (isRefetch) await fetchTasks()
+			if (redirect) router.push(redirect)
 		})
 	}
 
