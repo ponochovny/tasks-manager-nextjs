@@ -6,7 +6,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from '@/shared/ui/item'
-import { useTasks } from '@/app/providers/tasks-provider'
+import { ITask, useTasks } from '@/app/providers/tasks-provider'
 import HumanDate from '@/shared/ui/human-date'
 import {
 	DeleteTaskButton,
@@ -16,7 +16,24 @@ import {
 } from '@/features/task'
 
 const TasksList = () => {
-	const { tasks } = useTasks()
+	const { tasks, setTasks } = useTasks()
+
+	const updatedTaskHandler = (updatedTask: ITask) => {
+		if (!tasks) return
+		setTasks(
+			tasks.map((task) =>
+				task.id === updatedTask.id
+					? {
+							...task,
+							completed: updatedTask.completed,
+							date_completed: updatedTask.completed
+								? updatedTask.date_completed
+								: null,
+					  }
+					: task
+			)
+		)
+	}
 
 	if (!tasks) return null
 
@@ -30,7 +47,10 @@ const TasksList = () => {
 				<Item variant='outline' size='sm' asChild key={task.id}>
 					<div className='flex items-center justify-between w-full'>
 						<ItemMedia>
-							<ToggleTaskCompleteButton task={task} />
+							<ToggleTaskCompleteButton
+								task={task}
+								updatedTaskHandler={updatedTaskHandler}
+							/>
 						</ItemMedia>
 						<ItemContent className='items-start'>
 							<Link href={`/tasks/${task.id}`} className='inline-block'>

@@ -2,27 +2,29 @@
 
 import { taskCompletedToggle } from '@/app/api/tasks.api'
 import { ITask, useTasks } from '@/app/providers/tasks-provider'
+import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { CheckCircleIcon, CircleIcon } from 'lucide-react'
 
-const ToggleTaskCompleteButton = ({ task }: { task: ITask }) => {
-	const { tasks, setTasks } = useTasks()
+const ToggleTaskCompleteButton = ({
+	task,
+	size = 'sm',
+	updatedTaskHandler,
+}: {
+	task: ITask
+	size?: string
+	updatedTaskHandler: (updatedTask: ITask) => void
+}) => {
+	const { tasks } = useTasks()
 
 	const handleToggleTaskCompleted = async (id: number, completed: boolean) => {
-		const updatedTask = await taskCompletedToggle(id, completed)
-		setTasks(
-			tasks.map((task) =>
-				task.id === id
-					? {
-							...task,
-							completed: updatedTask.completed,
-							date_completed: updatedTask.completed
-								? updatedTask.date_completed
-								: null,
-					  }
-					: task
-			)
-		)
+		if (!tasks) return
+
+		try {
+			const updatedTask = await taskCompletedToggle(id, completed)
+
+			updatedTaskHandler(updatedTask)
+		} catch {}
 	}
 
 	return (
@@ -32,9 +34,13 @@ const ToggleTaskCompleteButton = ({ task }: { task: ITask }) => {
 			onClick={() => handleToggleTaskCompleted(task.id, task.completed)}
 		>
 			{task.completed ? (
-				<CheckCircleIcon className='size-5 text-green-500' />
+				<CheckCircleIcon
+					className={cn('text-green-500', size === 'sm' ? 'size-5' : 'size-8')}
+				/>
 			) : (
-				<CircleIcon className='size-5 text-gray-300' />
+				<CircleIcon
+					className={cn('text-gray-300', size === 'sm' ? 'size-5' : 'size-8')}
+				/>
 			)}
 		</Button>
 	)

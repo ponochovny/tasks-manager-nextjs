@@ -1,26 +1,20 @@
 import { ITask } from '@/app/providers/tasks-provider'
 import H1 from '@/shared/ui/h1'
 import HumanDate from '@/shared/ui/human-date'
-import { CheckCircleIcon, CircleIcon } from 'lucide-react'
 
-const TaskInfo = ({ task }: { task: ITask }) => {
-	const {
-		completed,
-		title,
-		description,
-		priority,
-		date_created,
-		date_completed,
-	} = task
+const TaskInfo = ({
+	task,
+	toggleTaskCompletionSlot,
+}: {
+	task: ITask
+	toggleTaskCompletionSlot: React.ReactNode
+}) => {
+	const { title, description, priority, date_created, date_completed } = task
 
 	return (
 		<>
 			<H1>
-				{completed ? (
-					<CheckCircleIcon className='size-8 text-green-500' />
-				) : (
-					<CircleIcon className='size-8 text-gray-300' />
-				)}
+				{toggleTaskCompletionSlot}
 				{title}
 			</H1>
 			<div>

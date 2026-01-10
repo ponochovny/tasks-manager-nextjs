@@ -3,7 +3,7 @@
 import { getTaskById } from '@/app/api/tasks.api'
 import { ITask } from '@/app/providers/tasks-provider'
 import { TaskInfo } from '@/entities/task'
-import { DeleteTaskButton } from '@/features/task'
+import { DeleteTaskButton, ToggleTaskCompleteButton } from '@/features/task'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useState, useTransition } from 'react'
 
@@ -22,24 +22,38 @@ const TaskPage = () => {
 		} catch {}
 	}, [id])
 
-	useEffect(() => {
+	const refetchTask = useCallback(() => {
 		startTransition(async () => {
 			await getTask().then((data) => setTask(data))
 		})
 	}, [getTask])
 
+	useEffect(() => {
+		refetchTask()
+	}, [refetchTask])
+
 	if (task === null && !isPending) return null
 
 	return (
 		<div className='space-y-6'>
-			{isPending ? (
+			{isPending && !task ? (
 				<p>Loading...</p>
 			) : !task ? (
 				<p className='text-gray-500'>Task not found</p>
 			) : null}
+
 			{task && (
 				<div className='space-y-2'>
-					<TaskInfo task={task as ITask} />
+					<TaskInfo
+						task={task as ITask}
+						toggleTaskCompletionSlot={
+							<ToggleTaskCompleteButton
+								task={task}
+								updatedTaskHandler={refetchTask}
+								size='md'
+							/>
+						}
+					/>
 					<DeleteTaskButton taskId={(task as ITask).id} isRefetch={false} />
 				</div>
 			)}

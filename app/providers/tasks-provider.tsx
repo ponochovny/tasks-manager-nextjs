@@ -30,7 +30,7 @@ export interface ITask {
 export interface ITasksContext {
 	tasks: ITask[] | null
 	setTasks: (tasks: ITask[]) => void
-	fetchTasks: () => Promise<void>
+	refetchTasks: () => void
 	page?: number | null
 	pagination: {
 		total: number
@@ -44,7 +44,7 @@ export interface ITasksContext {
 export const TasksContext = createContext<ITasksContext>({
 	tasks: null,
 	setTasks: () => {},
-	fetchTasks: async () => {},
+	refetchTasks: () => {},
 	page: null,
 	pagination: { total: 0, limit: 0, page: 0, pages: 0 },
 	isPending: true,
@@ -77,7 +77,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 		} catch {}
 	}, [setPage, setPagination, setTasks, currentPage])
 
-	useEffect(() => {
+	const refetchTasks = useCallback(() => {
 		startTransition(async () => {
 			await fetchTasks()
 		})
@@ -85,7 +85,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<TasksContext
-			value={{ tasks, setTasks, page, pagination, isPending, fetchTasks }}
+			value={{ tasks, setTasks, page, pagination, isPending, refetchTasks }}
 		>
 			{children}
 		</TasksContext>

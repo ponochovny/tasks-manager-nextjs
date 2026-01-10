@@ -32,9 +32,9 @@
       "title": "Fourth Task",
       "priority": "medium",
       "description": "This is the fourth task",
-      "completed": true,
+      "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
-      "date_completed": "2025-12-27T23:03:48.905Z"
+      "date_completed": null
     },
     {
       "id": 5,
