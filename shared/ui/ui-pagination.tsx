@@ -28,6 +28,10 @@ const UiPagination = (props: {
 		pagination?.page < pagination?.pages ? pagination?.page + 1 : null
 	const nextPageLink = nextPage ? `/?page=${nextPage}` : '#'
 
+	if (!pagination?.pages || pagination.pages < 1) {
+		return null
+	}
+
 	return (
 		<Pagination>
 			<PaginationContent>

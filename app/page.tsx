@@ -10,10 +10,16 @@ export default function Home() {
 
 	return (
 		<>
-			<H1>Tasks {isPending ? '(Loading...)' : ''}</H1>
+			<H1>Tasks</H1>
 			<div className='mt-10 w-full space-y-6'>
-				<TasksList />
-				<UiPagination pagination={pagination} />
+				{isPending ? (
+					<p className='text-gray-500'>Loading...</p>
+				) : (
+					<>
+						<TasksList />
+						<UiPagination pagination={pagination} />
+					</>
+				)}
 			</div>
 		</>
 	)

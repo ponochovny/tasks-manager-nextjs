@@ -28,7 +28,7 @@ export interface ITask {
 }
 
 export interface ITasksContext {
-	tasks: ITask[]
+	tasks: ITask[] | null
 	setTasks: (tasks: ITask[]) => void
 	fetchTasks: () => Promise<void>
 	page?: number | null
@@ -42,19 +42,19 @@ export interface ITasksContext {
 }
 
 export const TasksContext = createContext<ITasksContext>({
-	tasks: [],
+	tasks: null,
 	setTasks: () => {},
 	fetchTasks: async () => {},
 	page: null,
 	pagination: { total: 0, limit: 0, page: 0, pages: 0 },
-	isPending: false,
+	isPending: true,
 })
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 	const params = useSearchParams()
 	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
 
-	const [tasks, setTasks] = useState<ITask[]>([])
+	const [tasks, setTasks] = useState<ITask[] | null>(null)
 	const [page, setPage] = useState<number | null>(null)
 	const [pagination, setPagination] = useState<{
 		total: number
@@ -66,11 +66,15 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const fetchTasks = useCallback(async () => {
 		const page = currentPage
-
-		const data = await getTasks(page)
 		setPage(page)
-		setPagination(data.pagination)
-		setTasks(data.data)
+
+		try {
+			await getTasks(page)
+
+			const res = await getTasks(page)
+			setPagination(res.pagination)
+			setTasks(res.data)
+		} catch {}
 	}, [setPage, setPagination, setTasks, currentPage])
 
 	useEffect(() => {

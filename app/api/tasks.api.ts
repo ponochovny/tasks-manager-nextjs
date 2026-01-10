@@ -1,24 +1,32 @@
 const BASE_URL = 'http://localhost:3001'
 
 export const getTasks = async (page = 1) => {
-	const res = await fetch(`${BASE_URL}/tasks?_page=${page}&_limit=5`)
-	const data = await res.json()
-	return {
-		data,
-		pagination: {
-			total: 12,
-			limit: 5,
-			page,
-			pages: 3,
-		},
+	try {
+		const res = await fetch(`${BASE_URL}/tasks?_page=${page}&_limit=5`)
+		const data = await res.json()
+		return {
+			data,
+			pagination: {
+				total: 12,
+				limit: 5,
+				page,
+				pages: 3,
+			},
+		}
+	} catch {
+		throw new Error('Failed to fetch tasks')
 	}
 }
 
 export const getTaskById = async (taskId: number) => {
-	const res = await fetch(`${BASE_URL}/tasks/${taskId}`)
-	const data = await res.json()
-	return {
-		data,
+	try {
+		const res = await fetch(`${BASE_URL}/tasks/${taskId}`)
+		const data = await res.json()
+		return {
+			data,
+		}
+	} catch {
+		throw new Error('Failed to fetch task ' + taskId)
 	}
 }
 
