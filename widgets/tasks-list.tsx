@@ -11,15 +11,17 @@ import HumanDate from '@/shared/ui/human-date'
 import {
 	DeleteTaskButton,
 	EditTaskButton,
-	SetTaskPrioritySelect,
 	ToggleTaskCompleteButton,
 } from '@/features/task'
+import { PrioritySelect } from '@/entities/task'
+import { taskPriorityChange } from '@/app/api/tasks.api'
 
 const TasksList = () => {
 	const { tasks, setTasks } = useTasks()
 
 	const updatedTaskHandler = (updatedTask: ITask) => {
 		if (!tasks) return
+
 		setTasks(
 			tasks.map((task) =>
 				task.id === updatedTask.id
@@ -31,6 +33,17 @@ const TasksList = () => {
 								: null,
 					  }
 					: task
+			)
+		)
+	}
+
+	const handleTaskPriorityChange = async (id: number, value: string) => {
+		if (!tasks) return
+
+		const updatedTask = await taskPriorityChange(id, value)
+		setTasks(
+			tasks.map((task) =>
+				task.id === id ? { ...task, priority: updatedTask.priority } : task
 			)
 		)
 	}
@@ -61,7 +74,12 @@ const TasksList = () => {
 							</ItemTitle>
 						</ItemContent>
 						<ItemActions>
-							<SetTaskPrioritySelect task={task} />
+							<PrioritySelect
+								defaultValue={task.priority}
+								valueChanged={(value) =>
+									handleTaskPriorityChange(task.id, value)
+								}
+							/>
 							<EditTaskButton taskId={task.id} />
 							<DeleteTaskButton taskId={task.id} />
 						</ItemActions>
