@@ -28,8 +28,8 @@ npm run mock
 - [x] Single task page with all details and features
 
 Single page for creating/editing a task
-- [ ] Form fields: name, description, priority (low, medium, high), completed date
-- [ ] Form validation (all fields are required, date cannot be in the past)
+- [x] Form fields: name, description, priority (low, medium, high), completed date
+- [x] Form validation (all fields are required, date cannot be in the past)
 
 Tasks list with filters / sorting
 - [ ] Done/undone filter

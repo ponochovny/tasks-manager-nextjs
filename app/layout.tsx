@@ -4,6 +4,7 @@ import './globals.css'
 import { TasksProvider } from '@/app/providers/tasks-provider'
 import { ThemeProvider } from '@/app/providers/theme-provider'
 import { ModeToggle } from '@/shared/ui/theme-toggle'
+import { Toaster } from '@/shared/ui/sonner'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -26,12 +27,13 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='en'>
+		<html lang='en' suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				suppressHydrationWarning
 			>
 				<div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-					<main className='flex min-h-screen w-full flex-col items-center justify-between py-24 px-16 bg-white dark:bg-black sm:items-start'>
+					<main className='flex min-h-screen w-full flex-col items-center  py-24 px-16 bg-white dark:bg-black sm:items-start'>
 						<ThemeProvider
 							attribute='class'
 							defaultTheme='system'
@@ -45,6 +47,7 @@ export default function RootLayout({
 						</ThemeProvider>
 					</main>
 				</div>
+				<Toaster />
 			</body>
 		</html>
 	)

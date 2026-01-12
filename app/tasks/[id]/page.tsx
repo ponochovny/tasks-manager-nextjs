@@ -34,14 +34,24 @@ const TaskPage = () => {
 
 	if (task === null && !isPending) return null
 
+	if (!task && !isPending) {
+		return (
+			<div className='py-10 text-center'>
+				<p className='text-gray-500'>Task not found</p>
+			</div>
+		)
+	}
+
+	if (!task && isPending) {
+		return (
+			<div className='py-10 text-center'>
+				<p>Loading...</p>
+			</div>
+		)
+	}
+
 	return (
 		<div className='space-y-6'>
-			{isPending && !task ? (
-				<p>Loading...</p>
-			) : !task ? (
-				<p className='text-gray-500'>Task not found</p>
-			) : null}
-
 			{task && (
 				<div className='space-y-2'>
 					<TaskInfo

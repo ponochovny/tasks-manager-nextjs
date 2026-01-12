@@ -16,13 +16,13 @@ const DeleteTaskButton = ({
 	redirect?: string
 }) => {
 	const [isPending, startTransition] = useTransition()
-	const { fetchTasks } = useTasks()
+	const { refetchTasks } = useTasks()
 	const router = useRouter()
 
 	const handleDelete = () => {
 		startTransition(async () => {
 			await deleteTaskById(taskId)
-			if (isRefetch) await fetchTasks()
+			if (isRefetch) refetchTasks()
 			if (redirect) router.push(redirect)
 		})
 	}

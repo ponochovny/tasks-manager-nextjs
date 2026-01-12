@@ -1,3 +1,5 @@
+import { ITask } from '../providers/tasks-provider'
+
 const BASE_URL = 'http://localhost:3001'
 
 export const getTasks = async (page = 1) => {
@@ -21,6 +23,9 @@ export const getTasks = async (page = 1) => {
 export const getTaskById = async (taskId: number) => {
 	try {
 		const res = await fetch(`${BASE_URL}/tasks/${taskId}`)
+		if (!res.ok) {
+			throw new Error('Task not found')
+		}
 		const data = await res.json()
 		return {
 			data,
@@ -59,6 +64,32 @@ export const taskPriorityChange = async (id: number, priority: string) => {
 		},
 		body: JSON.stringify({
 			priority,
+		}),
+	})
+	return res.json()
+}
+
+export const editTask = async (id: number, updatedData: Omit<ITask, 'id'>) => {
+	const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			...updatedData,
+		}),
+	})
+	return res.json()
+}
+
+export const createTask = async (data: Omit<ITask, 'id'>) => {
+	const res = await fetch(`${BASE_URL}/tasks`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			...data,
 		}),
 	})
 	return res.json()

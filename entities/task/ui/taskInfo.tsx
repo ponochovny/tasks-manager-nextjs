@@ -1,4 +1,5 @@
 import { ITask } from '@/app/providers/tasks-provider'
+import { EditTaskButton } from '@/features/task'
 import H1 from '@/shared/ui/h1'
 import HumanDate from '@/shared/ui/human-date'
 
@@ -16,6 +17,7 @@ const TaskInfo = ({
 			<H1>
 				{toggleTaskCompletionSlot}
 				{title}
+				<EditTaskButton taskId={task.id} />
 			</H1>
 			<div>
 				<p>{description}</p>
