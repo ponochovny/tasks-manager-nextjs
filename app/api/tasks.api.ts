@@ -37,13 +37,14 @@ export const getTasks = async (query: TasksQuery) => {
 	try {
 		const res = await fetch(url)
 		const data = await res.json()
+		const totalItems = res.headers.get('x-total-count')
 		return {
 			data,
 			pagination: {
-				total: 12,
+				total: totalItems ? Number(totalItems) : 0,
 				limit: 5,
 				page: query.page || 1,
-				pages: 3,
+				pages: Math.ceil(Number(totalItems) / 5),
 			},
 		}
 	} catch {

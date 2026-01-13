@@ -76,6 +76,9 @@ function buildSearchParams(query: TasksQuery) {
 }
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
+	const router = useRouter()
+	const pathname = usePathname()
+
 	const [tasks, setTasks] = useState<ITask[] | null>(null)
 	const [isPending, startTransition] = useTransition()
 
@@ -119,14 +122,22 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const fetchTasks = useCallback(async () => {
 		try {
-			const res = await getTasks({ ...query, page: currentPage })
+			const res = await getTasks({ ...query })
+			if (
+				Math.ceil(Number(res.pagination.total) / res.pagination.limit) <
+				res.pagination.page
+			) {
+				router.push(
+					`${pathname}?page=${Math.ceil(
+						Number(res.pagination.total) / res.pagination.limit
+					)}`
+				)
+				return
+			}
 			setPagination(res.pagination)
 			setTasks(res.data)
 		} catch {}
-	}, [query, currentPage])
-
-	const router = useRouter()
-	const pathname = usePathname()
+	}, [query, router, pathname])
 
 	const refetchTasks = useCallback(() => {
 		startTransition(async () => {
@@ -135,11 +146,21 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 	}, [fetchTasks])
 
 	useEffect(() => {
-		const params = buildSearchParams({ ...query, page: currentPage })
+		const params = buildSearchParams({ ...query })
 		router.replace(`${pathname}?${params.toString()}`)
+	}, [query, router, pathname])
 
+	useEffect(() => {
 		refetchTasks()
-	}, [query, router, pathname, refetchTasks, currentPage])
+	}, [refetchTasks, query])
+
+	useEffect(() => {
+		if (currentPage === query.page) return
+
+		startTransition(() => {
+			setQuery({ ...query, page: currentPage })
+		})
+	}, [currentPage, setQuery, query])
 
 	return (
 		<TasksContext

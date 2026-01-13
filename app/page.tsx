@@ -63,6 +63,7 @@ export default function Home() {
 								setQuery((prev) => ({
 									...prev,
 									sort: query.sort === 'priority' ? undefined : query.sort,
+									order: undefined,
 									priority: value,
 								}))
 							}

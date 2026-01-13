@@ -35,30 +35,47 @@ const UiPagination = ({
 	return (
 		<Pagination>
 			<PaginationContent>
-				<PaginationItem>
-					<PaginationPrevious href={prevPageLink} />
-				</PaginationItem>
+				{prevPage && (
+					<PaginationItem>
+						<PaginationPrevious href={prevPageLink} />
+					</PaginationItem>
+				)}
 				<PaginationItem>
 					{Array.from({ length: pagination?.pages || 0 }, (_, i) => i + 1).map(
-						(pageNumber) => (
-							<Link
-								href={`/?page=${pageNumber}`}
-								key={pageNumber}
-								className={cn(
-									buttonVariants({
-										variant:
-											pageNumber === pagination.page ? 'outline' : 'ghost',
-									})
-								)}
-							>
-								{pageNumber}
-							</Link>
-						)
+						(pageNumber) => {
+							return pageNumber === pagination.page ? (
+								<span
+									key={pageNumber}
+									className={cn(
+										buttonVariants({
+											variant: 'outline',
+										})
+									)}
+								>
+									{pageNumber}
+								</span>
+							) : (
+								<Link
+									href={`/?page=${pageNumber}`}
+									key={pageNumber}
+									className={cn(
+										buttonVariants({
+											variant:
+												pageNumber === pagination.page ? 'outline' : 'ghost',
+										})
+									)}
+								>
+									{pageNumber}
+								</Link>
+							)
+						}
 					)}
 				</PaginationItem>
-				<PaginationItem>
-					<PaginationNext href={nextPageLink} />
-				</PaginationItem>
+				{nextPage && (
+					<PaginationItem>
+						<PaginationNext href={nextPageLink} />
+					</PaginationItem>
+				)}
 			</PaginationContent>
 		</Pagination>
 	)
