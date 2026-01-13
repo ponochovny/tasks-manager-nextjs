@@ -32,11 +32,11 @@ Single page for creating/editing a task
 - [x] Form validation (all fields are required, date cannot be in the past)
 
 Tasks list with filters / sorting
-- [ ] Done/undone filter
-- [ ] Priority filter
-- [ ] Created date sorting
-- [ ] Completed date sorting
-- [ ] Priority sorting
+- [x] Done/undone filter
+- [x] Priority filter
+- [x] Created date sorting
+- [x] Completed date sorting
+- [x] Priority sorting
 
 ### Bonus
 - [ ] drag-and-drop for

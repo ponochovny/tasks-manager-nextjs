@@ -88,9 +88,14 @@ export default function Home() {
 								onClick={() =>
 									setQuery((prev) => ({
 										...prev,
-										sort: query.order === 'desc' ? undefined : 'priority',
+										sort:
+											query.order === 'desc' && query.sort === 'priority'
+												? undefined
+												: 'priority',
 										order:
-											query.order === 'asc'
+											query.sort !== 'priority'
+												? 'asc'
+												: query.order === 'asc'
 												? 'desc'
 												: query.order === 'desc'
 												? undefined
@@ -131,9 +136,14 @@ export default function Home() {
 							onClick={() =>
 								setQuery((prev) => ({
 									...prev,
-									sort: query.order === 'desc' ? undefined : 'date_completed',
+									sort:
+										query.order === 'desc' && query.sort === 'date_completed'
+											? undefined
+											: 'date_completed',
 									order:
-										query.order === 'asc'
+										query.sort !== 'date_completed'
+											? 'asc'
+											: query.order === 'asc'
 											? 'desc'
 											: query.order === 'desc'
 											? undefined
@@ -155,6 +165,53 @@ export default function Home() {
 							)}
 						</Button>
 						{query.sort === 'date_completed' && query.order !== undefined && (
+							<Button
+								onClick={() =>
+									setQuery((prev) => ({
+										...prev,
+										sort: undefined,
+										order: undefined,
+									}))
+								}
+								variant='ghost'
+							>
+								<XCircleIcon className='size-4' />
+							</Button>
+						)}
+					</div>
+					<div className='flex items-center'>
+						<Button
+							onClick={() =>
+								setQuery((prev) => ({
+									...prev,
+									sort:
+										query.order === 'desc' && query.sort === 'date_created'
+											? undefined
+											: 'date_created',
+									order:
+										query.sort !== 'date_created'
+											? 'asc'
+											: query.order === 'asc'
+											? 'desc'
+											: query.order === 'desc'
+											? undefined
+											: 'asc',
+								}))
+							}
+							variant='outline'
+						>
+							Date created
+							{query.order === 'asc' && query.sort === 'date_created' && (
+								<ArrowDownWideNarrowIcon className='inline-block size-4 ml-1' />
+							)}
+							{query.order === 'desc' && query.sort === 'date_created' && (
+								<ArrowUpNarrowWideIcon className='inline-block size-4 ml-1' />
+							)}
+							{(query.order === undefined || query.sort !== 'date_created') && (
+								<ArrowDownUp className='inline-block size-4 ml-1' />
+							)}
+						</Button>
+						{query.sort === 'date_created' && query.order !== undefined && (
 							<Button
 								onClick={() =>
 									setQuery((prev) => ({
