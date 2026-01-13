@@ -33,7 +33,7 @@ export default function RootLayout({
 				suppressHydrationWarning
 			>
 				<div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-					<main className='flex min-h-screen w-full flex-col items-center  py-24 px-16 bg-white dark:bg-black sm:items-start'>
+					<main className='flex min-h-screen w-full flex-col items-center  py-24 px-16 bg-zinc-200 dark:bg-black sm:items-start'>
 						<ThemeProvider
 							attribute='class'
 							defaultTheme='system'

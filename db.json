@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Initial Task",
-      "priority": "high",
+      "priority": 3,
       "description": "This is the initial task",
       "completed": true,
       "date_created": "2025-12-27T23:03:48.904Z",
@@ -12,7 +12,7 @@
     {
       "id": 2,
       "title": "Second Task",
-      "priority": "low",
+      "priority": 1,
       "description": "This is the second task",
       "completed": true,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -21,7 +21,7 @@
     {
       "id": 3,
       "title": "Third Task",
-      "priority": "low",
+      "priority": 1,
       "description": "This is the third task",
       "completed": true,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -30,7 +30,7 @@
     {
       "id": 4,
       "title": "Fourth Task 4",
-      "priority": "high",
+      "priority": 1,
       "description": "This is the fourth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -39,7 +39,7 @@
     {
       "id": 5,
       "title": "Fifth Task",
-      "priority": "medium",
+      "priority": 2,
       "description": "This is the fifth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -48,7 +48,7 @@
     {
       "id": 6,
       "title": "Sixth Task",
-      "priority": "high",
+      "priority": 3,
       "description": "This is the sixth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -57,7 +57,7 @@
     {
       "id": 7,
       "title": "Seventh Task",
-      "priority": "low",
+      "priority": 1,
       "description": "This is the seventh task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -66,7 +66,7 @@
     {
       "id": 8,
       "title": "Eighth Task",
-      "priority": "medium",
+      "priority": 2,
       "description": "This is the eighth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -75,7 +75,7 @@
     {
       "id": 9,
       "title": "Ninth Task",
-      "priority": "high",
+      "priority": 3,
       "description": "This is the ninth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -84,7 +84,7 @@
     {
       "id": 10,
       "title": "Tenth Task",
-      "priority": "low",
+      "priority": 1,
       "description": "This is the tenth task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -93,7 +93,7 @@
     {
       "id": 11,
       "title": "Eleventh Task",
-      "priority": "medium",
+      "priority": 2,
       "description": "This is the eleventh task",
       "completed": false,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -102,7 +102,7 @@
     {
       "id": 13,
       "title": "Thirteenth Task",
-      "priority": "low",
+      "priority": 1,
       "description": "This is the thirteenth task",
       "completed": true,
       "date_created": "2025-12-27T23:03:48.905Z",
@@ -111,11 +111,20 @@
     {
       "title": "testtt",
       "description": "testss",
-      "priority": "high",
+      "priority": 3,
       "completed": true,
       "date_created": "2026-01-12T06:58:17.554Z",
       "date_completed": "2026-01-12T06:58:25.837Z",
       "id": 14
+    },
+    {
+      "title": "dsadas",
+      "description": "dsadasdasdasda",
+      "priority": 1,
+      "completed": false,
+      "date_created": "2026-01-13T02:37:46.904Z",
+      "date_completed": null,
+      "id": 15
     }
   ]
 }

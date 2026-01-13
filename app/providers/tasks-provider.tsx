@@ -2,19 +2,21 @@
 
 import {
 	createContext,
+	Dispatch,
+	SetStateAction,
 	useCallback,
 	useContext,
 	useEffect,
 	useState,
 	useTransition,
 } from 'react'
-import { getTasks } from '@/app/api/tasks.api'
-import { useSearchParams } from 'next/navigation'
+import { getTasks, TasksQuery } from '@/app/api/tasks.api'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export enum Priority {
-	low = 'low',
-	medium = 'medium',
-	high = 'high',
+	low = 1,
+	medium = 2,
+	high = 3,
 }
 
 export interface ITask {
@@ -31,6 +33,8 @@ export interface ITasksContext {
 	tasks: ITask[] | null
 	setTasks: (tasks: ITask[]) => void
 	refetchTasks: () => void
+	query: TasksQuery
+	setQuery: Dispatch<SetStateAction<TasksQuery>>
 	page?: number | null
 	pagination: {
 		total: number
@@ -45,37 +49,84 @@ export const TasksContext = createContext<ITasksContext>({
 	tasks: null,
 	setTasks: () => {},
 	refetchTasks: () => {},
+	query: {},
+	setQuery: () => {},
 	page: null,
 	pagination: { total: 0, limit: 0, page: 0, pages: 0 },
 	isPending: true,
 })
 
-export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
-	const params = useSearchParams()
-	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
+function buildSearchParams(query: TasksQuery) {
+	const params = new URLSearchParams()
 
+	if (query.completed !== undefined)
+		params.set('completed', String(query.completed))
+
+	if (query.page) params.set('page', String(query.page))
+
+	if (query.sort) params.set('sort', query.sort)
+
+	if (query.order) params.set('order', query.order)
+
+	if (query.priority) params.set('priority', query.priority)
+
+	// ⚠️ limit is NOT included
+
+	return params
+}
+
+export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 	const [tasks, setTasks] = useState<ITask[] | null>(null)
-	const [page, setPage] = useState<number | null>(null)
+	const [isPending, startTransition] = useTransition()
+
 	const [pagination, setPagination] = useState<{
 		total: number
 		limit: number
 		page: number
 		pages: number
-	}>({ total: 0, limit: 0, page: 0, pages: 0 })
-	const [isPending, startTransition] = useTransition()
+	}>({ total: 0, limit: 5, page: 0, pages: 0 })
+
+	const params = useSearchParams()
+	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
+	const completedFilter = params.get('completed')
+	const priorityFilter = params.get('priority')
+	const sortQuery = params.get('sort')
+	const orderQuery = params.get('order')
+	const [query, setQuery] = useState<TasksQuery>({
+		page: currentPage,
+		limit: pagination.limit,
+		completed:
+			completedFilter === 'true'
+				? true
+				: completedFilter === 'false'
+				? false
+				: undefined,
+		priority:
+			priorityFilter === 'low' ||
+			priorityFilter === 'medium' ||
+			priorityFilter === 'high'
+				? priorityFilter
+				: undefined,
+		sort:
+			sortQuery === 'priority' ||
+			sortQuery === 'date_created' ||
+			sortQuery === 'date_completed'
+				? sortQuery
+				: undefined,
+		order:
+			orderQuery === 'asc' || orderQuery === 'desc' ? orderQuery : undefined,
+	})
 
 	const fetchTasks = useCallback(async () => {
-		const page = currentPage
-		setPage(page)
-
 		try {
-			await getTasks(page)
-
-			const res = await getTasks(page)
+			const res = await getTasks({ ...query, page: currentPage })
 			setPagination(res.pagination)
 			setTasks(res.data)
 		} catch {}
-	}, [setPage, setPagination, setTasks, currentPage])
+	}, [query, currentPage])
+
+	const router = useRouter()
+	const pathname = usePathname()
 
 	const refetchTasks = useCallback(() => {
 		startTransition(async () => {
@@ -83,9 +134,25 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 		})
 	}, [fetchTasks])
 
+	useEffect(() => {
+		const params = buildSearchParams({ ...query, page: currentPage })
+		router.replace(`${pathname}?${params.toString()}`)
+
+		refetchTasks()
+	}, [query, router, pathname, refetchTasks, currentPage])
+
 	return (
 		<TasksContext
-			value={{ tasks, setTasks, page, pagination, isPending, refetchTasks }}
+			value={{
+				tasks,
+				setTasks,
+				page: query.page || null,
+				pagination,
+				isPending,
+				refetchTasks,
+				query,
+				setQuery,
+			}}
 		>
 			{children}
 		</TasksContext>

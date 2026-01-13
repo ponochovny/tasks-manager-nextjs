@@ -2,6 +2,7 @@ import { ITask } from '@/app/providers/tasks-provider'
 import { EditTaskButton } from '@/features/task'
 import H1 from '@/shared/ui/h1'
 import HumanDate from '@/shared/ui/human-date'
+import { priorityFormat } from '../utils'
 
 const TaskInfo = ({
 	task,
@@ -21,7 +22,7 @@ const TaskInfo = ({
 			</H1>
 			<div>
 				<p>{description}</p>
-				<p>Priority - {priority}</p>
+				<p>Priority - {priorityFormat(priority)}</p>
 				<p>
 					Created - <HumanDate date={date_created} />
 				</p>

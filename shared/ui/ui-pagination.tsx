@@ -11,7 +11,9 @@ import Link from 'next/link'
 import { cn } from '../lib/utils'
 import { buttonVariants } from './button'
 
-const UiPagination = (props: {
+const UiPagination = ({
+	pagination,
+}: {
 	pagination: {
 		total: number
 		limit: number
@@ -19,8 +21,6 @@ const UiPagination = (props: {
 		pages: number
 	}
 }) => {
-	const { pagination } = props
-
 	const prevPage = pagination?.page > 1 ? pagination?.page - 1 : null
 	const prevPageLink = prevPage ? `/?page=${prevPage}` : '#'
 

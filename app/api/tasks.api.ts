@@ -2,16 +2,47 @@ import { ITask } from '../providers/tasks-provider'
 
 const BASE_URL = 'http://localhost:3001'
 
-export const getTasks = async (page = 1) => {
+export type TasksQuery = {
+	completed?: boolean
+	priority?: string
+	page?: number
+	limit?: number
+	sort?: 'priority' | 'date_created' | 'date_completed'
+	order?: 'asc' | 'desc'
+}
+
+function buildTasksAPIUrl(query: TasksQuery) {
+	const params = new URLSearchParams()
+
+	// FILTERS
+	if (query.completed !== undefined)
+		params.set('completed', String(query.completed))
+	if (query.priority) params.set('priority', query.priority)
+
+	// PAGINATION
+	if (query.page) params.set('_page', String(query.page))
+	if (query.limit) params.set('_limit', String(query.limit))
+
+	// SORTING
+	// date_created, date_completed, priority
+	if (query.sort) params.set('_sort', query.sort)
+	if (query.order) params.set('_order', query.order)
+
+	return `${BASE_URL}/tasks?${params.toString()}`
+}
+
+export const getTasks = async (query: TasksQuery) => {
+	const url = buildTasksAPIUrl(query)
+
 	try {
-		const res = await fetch(`${BASE_URL}/tasks?_page=${page}&_limit=5`)
+		const res = await fetch(url)
 		const data = await res.json()
 		return {
 			data,
 			pagination: {
 				total: 12,
 				limit: 5,
-				page,
+				page: query.page || 1,
 				pages: 3,
 			},
 		}
@@ -56,7 +87,7 @@ export const taskCompletedToggle = async (id: number, completed: boolean) => {
 	return res.json()
 }
 
-export const taskPriorityChange = async (id: number, priority: string) => {
+export const taskPriorityChange = async (id: number, priority: number) => {
 	const res = await fetch(`${BASE_URL}/tasks/${id}`, {
 		method: 'PATCH',
 		headers: {

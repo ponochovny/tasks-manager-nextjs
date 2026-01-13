@@ -70,7 +70,6 @@ function TaskForm({
 	})
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values)
 		submitted(values)
 	}
 
@@ -123,7 +122,7 @@ function TaskForm({
 									<option value='high'>High</option>
 								</select> */}
 								<PrioritySelect
-									defaultValue={field.value}
+									value={field.value.toString()}
 									valueChanged={field.onChange}
 								/>
 							</FormControl>

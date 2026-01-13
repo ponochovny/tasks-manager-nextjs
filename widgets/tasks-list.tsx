@@ -40,7 +40,7 @@ const TasksList = () => {
 	const handleTaskPriorityChange = async (id: number, value: string) => {
 		if (!tasks) return
 
-		const updatedTask = await taskPriorityChange(id, value)
+		const updatedTask = await taskPriorityChange(id, +value)
 		setTasks(
 			tasks.map((task) =>
 				task.id === id ? { ...task, priority: updatedTask.priority } : task
@@ -75,7 +75,7 @@ const TasksList = () => {
 						</ItemContent>
 						<ItemActions>
 							<PrioritySelect
-								defaultValue={task.priority}
+								value={task.priority.toString()}
 								valueChanged={(value) =>
 									handleTaskPriorityChange(task.id, value)
 								}
