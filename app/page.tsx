@@ -5,18 +5,17 @@ import { useTasks } from './providers/tasks-provider'
 import UiPagination from '@/shared/ui/ui-pagination'
 import TasksList from '@/widgets/tasks-list'
 import { Button } from '@/shared/ui/button'
-import {
-	ArrowDownUp,
-	ArrowDownWideNarrowIcon,
-	ArrowUpNarrowWideIcon,
-	PlusIcon,
-	XCircleIcon,
-} from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import Link from 'next/link'
-import { CompletedSelect, PrioritySelect } from '@/entities/task'
+import { useEffect } from 'react'
+import TasksFilters from '@/widgets/tasks-filters'
 
 export default function Home() {
-	const { pagination, isPending, query, setQuery } = useTasks()
+	const { pagination, isPending, query, refetchTasks } = useTasks()
+
+	useEffect(() => {
+		refetchTasks()
+	}, [refetchTasks, query])
 
 	return (
 		<>
@@ -29,204 +28,7 @@ export default function Home() {
 				</Button>
 			</H1>
 			<div className='mt-10 w-full space-y-6'>
-				<div className='mb-4 flex gap-4'>
-					<div className='flex items-center'>
-						<CompletedSelect
-							value={
-								query.completed !== undefined ? String(query.completed) : ''
-							}
-							valueChanged={(value) =>
-								setQuery((prev) => ({
-									...prev,
-									completed: value === 'true',
-								}))
-							}
-						/>
-						{query.completed !== undefined && (
-							<Button
-								onClick={() =>
-									setQuery((prev) => ({
-										...prev,
-										completed: undefined,
-									}))
-								}
-								variant='ghost'
-							>
-								<XCircleIcon className='size-4' />
-							</Button>
-						)}
-					</div>
-					<div className='flex items-center'>
-						<PrioritySelect
-							value={query.priority || null}
-							valueChanged={(value) =>
-								setQuery((prev) => ({
-									...prev,
-									sort: query.sort === 'priority' ? undefined : query.sort,
-									order: undefined,
-									priority: value,
-								}))
-							}
-						/>
-						{query.priority && (
-							<Button
-								onClick={() =>
-									setQuery((prev) => ({
-										...prev,
-										priority: undefined,
-									}))
-								}
-								variant='ghost'
-							>
-								<XCircleIcon className='size-4' />
-							</Button>
-						)}
-					</div>
-					{query.priority === undefined && (
-						<div className='flex items-center'>
-							<Button
-								onClick={() =>
-									setQuery((prev) => ({
-										...prev,
-										sort:
-											query.order === 'desc' && query.sort === 'priority'
-												? undefined
-												: 'priority',
-										order:
-											query.sort !== 'priority'
-												? 'asc'
-												: query.order === 'asc'
-												? 'desc'
-												: query.order === 'desc'
-												? undefined
-												: 'asc',
-									}))
-								}
-								variant='outline'
-							>
-								Priority
-								{query.order === 'asc' && query.sort === 'priority' && (
-									<ArrowDownWideNarrowIcon className='inline-block size-4 ml-1' />
-								)}
-								{query.order === 'desc' && query.sort === 'priority' && (
-									<ArrowUpNarrowWideIcon className='inline-block size-4 ml-1' />
-								)}
-								{(query.order === undefined || query.sort !== 'priority') && (
-									<ArrowDownUp className='inline-block size-4 ml-1' />
-								)}
-							</Button>
-							{query.sort === 'priority' && query.order !== undefined && (
-								<Button
-									onClick={() =>
-										setQuery((prev) => ({
-											...prev,
-											sort: undefined,
-											order: undefined,
-										}))
-									}
-									variant='ghost'
-								>
-									<XCircleIcon className='size-4' />
-								</Button>
-							)}
-						</div>
-					)}
-					<div className='flex items-center'>
-						<Button
-							onClick={() =>
-								setQuery((prev) => ({
-									...prev,
-									sort:
-										query.order === 'desc' && query.sort === 'date_completed'
-											? undefined
-											: 'date_completed',
-									order:
-										query.sort !== 'date_completed'
-											? 'asc'
-											: query.order === 'asc'
-											? 'desc'
-											: query.order === 'desc'
-											? undefined
-											: 'asc',
-								}))
-							}
-							variant='outline'
-						>
-							Date completed
-							{query.order === 'asc' && query.sort === 'date_completed' && (
-								<ArrowDownWideNarrowIcon className='inline-block size-4 ml-1' />
-							)}
-							{query.order === 'desc' && query.sort === 'date_completed' && (
-								<ArrowUpNarrowWideIcon className='inline-block size-4 ml-1' />
-							)}
-							{(query.order === undefined ||
-								query.sort !== 'date_completed') && (
-								<ArrowDownUp className='inline-block size-4 ml-1' />
-							)}
-						</Button>
-						{query.sort === 'date_completed' && query.order !== undefined && (
-							<Button
-								onClick={() =>
-									setQuery((prev) => ({
-										...prev,
-										sort: undefined,
-										order: undefined,
-									}))
-								}
-								variant='ghost'
-							>
-								<XCircleIcon className='size-4' />
-							</Button>
-						)}
-					</div>
-					<div className='flex items-center'>
-						<Button
-							onClick={() =>
-								setQuery((prev) => ({
-									...prev,
-									sort:
-										query.order === 'desc' && query.sort === 'date_created'
-											? undefined
-											: 'date_created',
-									order:
-										query.sort !== 'date_created'
-											? 'asc'
-											: query.order === 'asc'
-											? 'desc'
-											: query.order === 'desc'
-											? undefined
-											: 'asc',
-								}))
-							}
-							variant='outline'
-						>
-							Date created
-							{query.order === 'asc' && query.sort === 'date_created' && (
-								<ArrowDownWideNarrowIcon className='inline-block size-4 ml-1' />
-							)}
-							{query.order === 'desc' && query.sort === 'date_created' && (
-								<ArrowUpNarrowWideIcon className='inline-block size-4 ml-1' />
-							)}
-							{(query.order === undefined || query.sort !== 'date_created') && (
-								<ArrowDownUp className='inline-block size-4 ml-1' />
-							)}
-						</Button>
-						{query.sort === 'date_created' && query.order !== undefined && (
-							<Button
-								onClick={() =>
-									setQuery((prev) => ({
-										...prev,
-										sort: undefined,
-										order: undefined,
-									}))
-								}
-								variant='ghost'
-							>
-								<XCircleIcon className='size-4' />
-							</Button>
-						)}
-					</div>
-				</div>
+				<TasksFilters />
 
 				{isPending ? (
 					<p className='text-gray-500'>Loading...</p>

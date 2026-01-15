@@ -6,7 +6,6 @@ import {
 	SetStateAction,
 	useCallback,
 	useContext,
-	useEffect,
 	useState,
 	useTransition,
 } from 'react'
@@ -55,25 +54,6 @@ export const TasksContext = createContext<ITasksContext>({
 	pagination: { total: 0, limit: 0, page: 0, pages: 0 },
 	isPending: true,
 })
-
-function buildSearchParams(query: TasksQuery) {
-	const params = new URLSearchParams()
-
-	if (query.completed !== undefined)
-		params.set('completed', String(query.completed))
-
-	if (query.page) params.set('page', String(query.page))
-
-	if (query.sort) params.set('sort', query.sort)
-
-	if (query.order) params.set('order', query.order)
-
-	if (query.priority) params.set('priority', query.priority)
-
-	// ⚠️ limit is NOT included
-
-	return params
-}
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 	const router = useRouter()
@@ -144,23 +124,6 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 			await fetchTasks()
 		})
 	}, [fetchTasks])
-
-	useEffect(() => {
-		const params = buildSearchParams({ ...query })
-		router.replace(`${pathname}?${params.toString()}`)
-	}, [query, router, pathname])
-
-	useEffect(() => {
-		refetchTasks()
-	}, [refetchTasks, query])
-
-	useEffect(() => {
-		if (currentPage === query.page) return
-
-		startTransition(() => {
-			setQuery({ ...query, page: currentPage })
-		})
-	}, [currentPage, setQuery, query])
 
 	return (
 		<TasksContext
