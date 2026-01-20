@@ -39,5 +39,11 @@ Tasks list with filters / sorting
 - [x] Priority sorting
 
 ### Bonus
-- [ ] drag-and-drop for
+- [x] Drag-and-drop for order change
 - [ ] Subtasks creation
+- [x] Dark/Light theme mode
+
+
+### Fixes
+- [ ] Multiple requests once d-n-d
+- [ ] If we are on 3d page and change filter and last page possible is 2nd

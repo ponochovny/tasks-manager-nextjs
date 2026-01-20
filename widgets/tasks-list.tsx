@@ -31,9 +31,9 @@ const TasksList = () => {
 							date_completed: updatedTask.completed
 								? updatedTask.date_completed
 								: null,
-					  }
-					: task
-			)
+						}
+					: task,
+			),
 		)
 	}
 
@@ -43,8 +43,8 @@ const TasksList = () => {
 		const updatedTask = await taskPriorityChange(id, +value)
 		setTasks(
 			tasks.map((task) =>
-				task.id === id ? { ...task, priority: updatedTask.priority } : task
-			)
+				task.id === id ? { ...task, priority: updatedTask.priority } : task,
+			),
 		)
 	}
 

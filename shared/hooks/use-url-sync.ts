@@ -16,6 +16,8 @@ function buildSearchParams(query: TasksQuery) {
 
 	if (query.priority) params.set('priority', query.priority)
 
+	if (query.mode) params.set('mode', query.mode)
+
 	// ⚠️ "limit" is NOT included
 
 	return params

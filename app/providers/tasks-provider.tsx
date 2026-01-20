@@ -26,6 +26,7 @@ export interface ITask {
 	description: string
 	date_created: string
 	date_completed: string | null
+	order?: number
 }
 
 export interface ITasksContext {
@@ -56,8 +57,8 @@ export const TasksContext = createContext<ITasksContext>({
 })
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
-	const router = useRouter()
-	const pathname = usePathname()
+	// const router = useRouter()
+	// const pathname = usePathname()
 
 	const [tasks, setTasks] = useState<ITask[] | null>(null)
 	const [isPending, startTransition] = useTransition()
@@ -75,6 +76,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 	const priorityFilter = params.get('priority')
 	const sortQuery = params.get('sort')
 	const orderQuery = params.get('order')
+	const modeQuery = params.get('mode')
 	const [query, setQuery] = useState<TasksQuery>({
 		page: currentPage,
 		limit: pagination.limit,
@@ -82,8 +84,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 			completedFilter === 'true'
 				? true
 				: completedFilter === 'false'
-				? false
-				: undefined,
+					? false
+					: undefined,
 		priority:
 			priorityFilter === 'low' ||
 			priorityFilter === 'medium' ||
@@ -93,31 +95,41 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 		sort:
 			sortQuery === 'priority' ||
 			sortQuery === 'date_created' ||
-			sortQuery === 'date_completed'
+			sortQuery === 'date_completed' ||
+			sortQuery === 'order'
 				? sortQuery
 				: undefined,
 		order:
 			orderQuery === 'asc' || orderQuery === 'desc' ? orderQuery : undefined,
+		mode: modeQuery === 'manual' ? 'manual' : 'auto',
 	})
 
 	const fetchTasks = useCallback(async () => {
 		try {
-			const res = await getTasks({ ...query })
-			if (
-				Math.ceil(Number(res.pagination.total) / res.pagination.limit) <
-				res.pagination.page
-			) {
-				router.push(
-					`${pathname}?page=${Math.ceil(
-						Number(res.pagination.total) / res.pagination.limit
-					)}`
-				)
-				return
-			}
-			setPagination(res.pagination)
-			setTasks(res.data)
+			const { pagination, data } = await getTasks({ ...query })
+
+			/** Correct the page */
+			// const maxPage = Math.ceil(Number(pagination.total) / pagination.limit)
+			// const isMaxPageLessThanCurrentPage = maxPage < pagination.page
+			// console.log('isMaxPageLessThanCurrentPage', isMaxPageLessThanCurrentPage)
+			// console.log('maxPage', maxPage, 'currentPage', pagination.page)
+
+			// if (isMaxPageLessThanCurrentPage) {
+			// 	router.push(
+			// 		`${pathname}${query.mode !== 'manual' ? `?page=${maxPage}` : ''}`,
+			// 	)
+			// 	return
+			// }
+			//** / Correct the page */
+
+			setPagination(pagination)
+			setTasks(data)
 		} catch {}
-	}, [query, router, pathname])
+	}, [
+		query,
+		// router,
+		// pathname
+	])
 
 	const refetchTasks = useCallback(() => {
 		startTransition(async () => {

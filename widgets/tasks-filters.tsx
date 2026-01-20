@@ -23,13 +23,13 @@ const TasksFilters = () => {
 		return query.sort !== field
 			? 'asc'
 			: query.order === 'asc'
-			? 'desc'
-			: query.order === 'desc'
-			? undefined
-			: 'asc'
+				? 'desc'
+				: query.order === 'desc'
+					? undefined
+					: 'asc'
 	}
 	const setSortLogic = (
-		field: 'priority' | 'date_created' | 'date_completed'
+		field: 'priority' | 'date_created' | 'date_completed',
 	) => {
 		return query.order === 'desc' && query.sort === field ? undefined : field
 	}
@@ -202,6 +202,22 @@ const TasksFilters = () => {
 						<XCircleIcon className='size-4' />
 					</Button>
 				)}
+			</div>
+			<div className='flex items-center'>
+				<Button
+					onClick={() =>
+						setQuery((prev) => ({
+							...prev,
+							mode: prev.mode === 'manual' ? 'auto' : 'manual',
+							sort: prev.mode === 'manual' ? undefined : 'order',
+							order: prev.mode === 'manual' ? undefined : 'asc',
+							page: 1,
+						}))
+					}
+					variant={query.mode === 'manual' ? 'default' : 'outline'}
+				>
+					Manual
+				</Button>
 			</div>
 		</div>
 	)
