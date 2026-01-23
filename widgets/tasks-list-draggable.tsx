@@ -70,9 +70,16 @@ const TasksListDraggable = () => {
 			const overIndex = tasks.findIndex((t) => t.id === over.id)
 			const newTasks = arrayMove(tasks, activeIndex, overIndex)
 			setTasks(newTasks)
-			const updates = newTasks.map((task, index) =>
-				updateTaskOrder(task.id, index),
-			)
+
+			// Update only changed items
+			const updates = []
+			const start = Math.min(activeIndex, overIndex)
+			const end = Math.max(activeIndex, overIndex)
+
+			for (let i = start; i <= end; i++) {
+				updates.push(updateTaskOrder(newTasks[i].id, i))
+			}
+
 			await Promise.all(updates)
 		},
 		[tasks, setTasks],

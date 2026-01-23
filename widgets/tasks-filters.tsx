@@ -71,6 +71,7 @@ const TasksFilters = () => {
 						setQuery((prev) => ({
 							...prev,
 							completed: value === 'true',
+							mode: 'auto',
 						}))
 					}
 				/>
@@ -97,6 +98,7 @@ const TasksFilters = () => {
 							sort: query.sort === 'priority' ? undefined : query.sort,
 							order: undefined,
 							priority: value,
+							mode: 'auto',
 						}))
 					}
 				/>
@@ -122,6 +124,7 @@ const TasksFilters = () => {
 								...prev,
 								sort: setSortLogic('priority'),
 								order: setOrderLogic('priority'),
+								mode: 'auto',
 							}))
 						}
 						variant='outline'
@@ -152,6 +155,7 @@ const TasksFilters = () => {
 							...prev,
 							sort: setSortLogic('date_completed'),
 							order: setOrderLogic('date_completed'),
+							mode: 'auto',
 						}))
 					}
 					variant='outline'
@@ -181,6 +185,7 @@ const TasksFilters = () => {
 							...prev,
 							sort: setSortLogic('date_created'),
 							order: setOrderLogic('date_created'),
+							mode: 'auto',
 						}))
 					}
 					variant='outline'

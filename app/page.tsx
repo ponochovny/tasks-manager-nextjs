@@ -36,8 +36,14 @@ export default function Home() {
 					<p className='text-gray-500'>Loading...</p>
 				) : (
 					<>
-						{query.mode === 'manual' ? <TasksListDraggable /> : <TasksList />}
-						<UiPagination pagination={pagination} />
+						{query.mode === 'manual' ? (
+							<TasksListDraggable />
+						) : (
+							<>
+								<TasksList />
+								<UiPagination pagination={pagination} />
+							</>
+						)}
 					</>
 				)}
 			</div>
