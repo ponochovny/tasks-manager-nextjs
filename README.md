@@ -39,5 +39,10 @@ Tasks list with filters / sorting
 - [x] Priority sorting
 
 ### Bonus
-- [ ] drag-and-drop for
+- [x] Drag-and-drop for order change
 - [ ] Subtasks creation
+- [x] Dark/Light theme mode
+
+
+### Fixes
+- [ ] If a user manually type 'desc' when mode=manual and we get desc order and change the order - the order changes wront

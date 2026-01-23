@@ -7,8 +7,9 @@ export type TasksQuery = {
 	priority?: string
 	page?: number
 	limit?: number
-	sort?: 'priority' | 'date_created' | 'date_completed'
+	sort?: 'priority' | 'date_created' | 'date_completed' | 'order'
 	order?: 'asc' | 'desc'
+	mode?: 'manual' | 'auto'
 }
 
 function buildTasksAPIUrl(query: TasksQuery) {
@@ -20,11 +21,12 @@ function buildTasksAPIUrl(query: TasksQuery) {
 	if (query.priority) params.set('priority', query.priority)
 
 	// PAGINATION
-	if (query.page) params.set('_page', String(query.page))
-	if (query.limit) params.set('_limit', String(query.limit))
+	if (query.page && query.mode !== 'manual')
+		params.set('_page', String(query.page))
+	if (query.limit && query.mode !== 'manual')
+		params.set('_limit', String(query.limit))
 
 	// SORTING
-	// date_created, date_completed, priority
 	if (query.sort) params.set('_sort', query.sort)
 	if (query.order) params.set('_order', query.order)
 
@@ -38,13 +40,15 @@ export const getTasks = async (query: TasksQuery) => {
 		const res = await fetch(url)
 		const data = await res.json()
 		const totalItems = res.headers.get('x-total-count')
+		const pages = Math.ceil(Number(totalItems) / 5)
+
 		return {
 			data,
 			pagination: {
 				total: totalItems ? Number(totalItems) : 0,
 				limit: 5,
 				page: query.page || 1,
-				pages: Math.ceil(Number(totalItems) / 5),
+				pages: pages || 1,
 			},
 		}
 	} catch {
@@ -96,6 +100,19 @@ export const taskPriorityChange = async (id: number, priority: number) => {
 		},
 		body: JSON.stringify({
 			priority,
+		}),
+	})
+	return res.json()
+}
+
+export const updateTaskOrder = async (id: number, order: number) => {
+	const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			order,
 		}),
 	})
 	return res.json()

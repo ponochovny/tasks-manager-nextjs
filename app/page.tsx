@@ -1,13 +1,15 @@
 'use client'
 
-import H1 from '@/shared/ui/h1'
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { PlusIcon } from 'lucide-react'
+
 import { useTasks } from './providers/tasks-provider'
+import H1 from '@/shared/ui/h1'
+import { Button } from '@/shared/ui/button'
 import UiPagination from '@/shared/ui/ui-pagination'
 import TasksList from '@/widgets/tasks-list'
-import { Button } from '@/shared/ui/button'
-import { PlusIcon } from 'lucide-react'
-import Link from 'next/link'
-import { useEffect } from 'react'
+import TasksListDraggable from '@/widgets/tasks-list-draggable'
 import TasksFilters from '@/widgets/tasks-filters'
 
 export default function Home() {
@@ -34,8 +36,14 @@ export default function Home() {
 					<p className='text-gray-500'>Loading...</p>
 				) : (
 					<>
-						<TasksList />
-						<UiPagination pagination={pagination} />
+						{query.mode === 'manual' ? (
+							<TasksListDraggable />
+						) : (
+							<>
+								<TasksList />
+								<UiPagination pagination={pagination} />
+							</>
+						)}
 					</>
 				)}
 			</div>

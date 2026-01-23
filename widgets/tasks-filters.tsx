@@ -1,6 +1,5 @@
 import { useTasks } from '@/app/providers/tasks-provider'
 import { CompletedSelect, PrioritySelect } from '@/entities/task'
-import { useUrlSync } from '@/shared/hooks/use-url-sync'
 import { Button } from '@/shared/ui/button'
 import {
 	ArrowDownUp,
@@ -8,28 +7,21 @@ import {
 	ArrowUpNarrowWideIcon,
 	XCircleIcon,
 } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
-import { startTransition, useEffect } from 'react'
 
 const TasksFilters = () => {
-	const params = useSearchParams()
-	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
-
 	const { query, setQuery } = useTasks()
-
-	useUrlSync(query)
 
 	const setOrderLogic = (field: string) => {
 		return query.sort !== field
 			? 'asc'
 			: query.order === 'asc'
-			? 'desc'
-			: query.order === 'desc'
-			? undefined
-			: 'asc'
+				? 'desc'
+				: query.order === 'desc'
+					? undefined
+					: 'asc'
 	}
 	const setSortLogic = (
-		field: 'priority' | 'date_created' | 'date_completed'
+		field: 'priority' | 'date_created' | 'date_completed',
 	) => {
 		return query.order === 'desc' && query.sort === field ? undefined : field
 	}
@@ -54,14 +46,6 @@ const TasksFilters = () => {
 		return query.sort === field && query.order !== undefined
 	}
 
-	useEffect(() => {
-		if (currentPage === query.page) return
-
-		startTransition(() => {
-			setQuery({ ...query, page: currentPage })
-		})
-	}, [currentPage, setQuery, query])
-
 	return (
 		<div className='mb-4 flex gap-4'>
 			<div className='flex items-center'>
@@ -71,6 +55,7 @@ const TasksFilters = () => {
 						setQuery((prev) => ({
 							...prev,
 							completed: value === 'true',
+							mode: 'auto',
 						}))
 					}
 				/>
@@ -97,6 +82,7 @@ const TasksFilters = () => {
 							sort: query.sort === 'priority' ? undefined : query.sort,
 							order: undefined,
 							priority: value,
+							mode: 'auto',
 						}))
 					}
 				/>
@@ -122,6 +108,7 @@ const TasksFilters = () => {
 								...prev,
 								sort: setSortLogic('priority'),
 								order: setOrderLogic('priority'),
+								mode: 'auto',
 							}))
 						}
 						variant='outline'
@@ -152,6 +139,7 @@ const TasksFilters = () => {
 							...prev,
 							sort: setSortLogic('date_completed'),
 							order: setOrderLogic('date_completed'),
+							mode: 'auto',
 						}))
 					}
 					variant='outline'
@@ -181,6 +169,7 @@ const TasksFilters = () => {
 							...prev,
 							sort: setSortLogic('date_created'),
 							order: setOrderLogic('date_created'),
+							mode: 'auto',
 						}))
 					}
 					variant='outline'
@@ -202,6 +191,24 @@ const TasksFilters = () => {
 						<XCircleIcon className='size-4' />
 					</Button>
 				)}
+			</div>
+			<div className='flex items-center'>
+				<Button
+					onClick={() =>
+						setQuery((prev) => ({
+							...prev,
+							mode: prev.mode === 'manual' ? 'auto' : 'manual',
+							sort: prev.mode === 'manual' ? undefined : 'order',
+							order: prev.mode === 'manual' ? undefined : 'asc',
+							completed: undefined,
+							priority: undefined,
+							page: undefined,
+						}))
+					}
+					variant={query.mode === 'manual' ? 'default' : 'outline'}
+				>
+					Manual
+				</Button>
 			</div>
 		</div>
 	)

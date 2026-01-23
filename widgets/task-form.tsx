@@ -43,7 +43,7 @@ export const formSchema = z
 		{
 			message: 'Completed date must be greater than or equal to created date.',
 			path: ['date_completed'],
-		}
+		},
 	)
 
 function TaskForm({
@@ -85,9 +85,6 @@ function TaskForm({
 							<FormControl>
 								<Input placeholder='Task title' {...field} />
 							</FormControl>
-							{/* <FormDescription>
-								This is your public display name.
-							</FormDescription> */}
 							<FormMessage />
 						</FormItem>
 					)}
@@ -101,9 +98,6 @@ function TaskForm({
 							<FormControl>
 								<Input placeholder='Task description' {...field} />
 							</FormControl>
-							{/* <FormDescription>
-								This is your public display name.
-							</FormDescription> */}
 							<FormMessage />
 						</FormItem>
 					)}
@@ -115,21 +109,11 @@ function TaskForm({
 						<FormItem>
 							<FormLabel>Priority</FormLabel>
 							<FormControl>
-								{/* <Input placeholder='shadcn' {...field} /> */}
-								{/* <select {...field} className='border rounded px-2 py-1'>
-									<option value='low'>Low</option>
-									<option value='medium'>Medium</option>
-									<option value='high'>High</option>
-								</select> */}
 								<PrioritySelect
 									value={field.value.toString()}
 									valueChanged={field.onChange}
 								/>
 							</FormControl>
-							{/* <FormDescription>
-								This is your public display name.
-							</FormDescription> */}
-							{/* <SetTaskPrioritySelect /> */}
 							<FormMessage />
 						</FormItem>
 					)}
@@ -173,7 +157,7 @@ function TaskForm({
 									timeChanged={(time) => {
 										const dateWithUpdatedTime = mergeDateAndTime(
 											field.value || new Date(),
-											time
+											time,
 										)
 										field.onChange(dateWithUpdatedTime)
 									}}
@@ -198,7 +182,7 @@ function TaskForm({
 									timeChanged={(time) => {
 										const dateWithUpdatedTime = mergeDateAndTime(
 											field.value,
-											time
+											time,
 										)
 										field.onChange(dateWithUpdatedTime)
 									}}
