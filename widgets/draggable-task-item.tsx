@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ITask } from '@/app/providers/tasks-provider'
@@ -56,13 +55,11 @@ const DraggableTaskItem = ({
 					<button
 						{...attributes}
 						{...listeners}
-						// className='cursor-grab active:cursor-grabbing p-2 hover:bg-gray-100 rounded'
 						className={cn(
 							buttonVariants({
 								variant: 'ghost',
 							}),
 							'cursor-grab active:cursor-grabbing',
-							// className,
 						)}
 						title='Drag to reorder'
 					>

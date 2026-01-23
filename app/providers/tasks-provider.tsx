@@ -117,7 +117,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 				newQuery = newQueryOrFn
 			}
 
-			// Обновляем URL, что автоматически обновит query через params
+			// Update the URL which will update query by params
 			const searchParams = new URLSearchParams()
 
 			if (newQuery.completed !== undefined)

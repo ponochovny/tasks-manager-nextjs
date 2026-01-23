@@ -27,7 +27,6 @@ function buildTasksAPIUrl(query: TasksQuery) {
 		params.set('_limit', String(query.limit))
 
 	// SORTING
-	// date_created, date_completed, priority, order
 	if (query.sort) params.set('_sort', query.sort)
 	if (query.order) params.set('_order', query.order)
 
