@@ -29,7 +29,6 @@ export const useUrlSync = (query: TasksQuery) => {
 	const prevQueryRef = useRef<TasksQuery>(query)
 
 	useEffect(() => {
-		// Сравниваем с предыдущим query чтобы избежать бесконечных обновлений
 		if (JSON.stringify(prevQueryRef.current) !== JSON.stringify(query)) {
 			prevQueryRef.current = query
 			const params = buildSearchParams(query)
