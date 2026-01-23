@@ -1,6 +1,5 @@
 import { useTasks } from '@/app/providers/tasks-provider'
 import { CompletedSelect, PrioritySelect } from '@/entities/task'
-import { useUrlSync } from '@/shared/hooks/use-url-sync'
 import { Button } from '@/shared/ui/button'
 import {
 	ArrowDownUp,
@@ -8,16 +7,9 @@ import {
 	ArrowUpNarrowWideIcon,
 	XCircleIcon,
 } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
-import { startTransition, useEffect } from 'react'
 
 const TasksFilters = () => {
-	const params = useSearchParams()
-	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
-
 	const { query, setQuery } = useTasks()
-
-	useUrlSync(query)
 
 	const setOrderLogic = (field: string) => {
 		return query.sort !== field
@@ -53,14 +45,6 @@ const TasksFilters = () => {
 	const sortClearBtnCondition = (field: string) => {
 		return query.sort === field && query.order !== undefined
 	}
-
-	useEffect(() => {
-		if (currentPage === query.page) return
-
-		startTransition(() => {
-			setQuery({ ...query, page: currentPage })
-		})
-	}, [currentPage, setQuery, query])
 
 	return (
 		<div className='mb-4 flex gap-4'>
@@ -216,7 +200,9 @@ const TasksFilters = () => {
 							mode: prev.mode === 'manual' ? 'auto' : 'manual',
 							sort: prev.mode === 'manual' ? undefined : 'order',
 							order: prev.mode === 'manual' ? undefined : 'asc',
-							page: 1,
+							completed: undefined,
+							priority: undefined,
+							page: undefined,
 						}))
 					}
 					variant={query.mode === 'manual' ? 'default' : 'outline'}

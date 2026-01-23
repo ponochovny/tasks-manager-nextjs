@@ -1,5 +1,5 @@
 import { useRouter, usePathname } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { TasksQuery } from '@/app/api/tasks.api'
 
 function buildSearchParams(query: TasksQuery) {
@@ -26,9 +26,14 @@ function buildSearchParams(query: TasksQuery) {
 export const useUrlSync = (query: TasksQuery) => {
 	const router = useRouter()
 	const pathname = usePathname()
+	const prevQueryRef = useRef<TasksQuery>(query)
 
 	useEffect(() => {
-		const params = buildSearchParams(query)
-		router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+		// Сравниваем с предыдущим query чтобы избежать бесконечных обновлений
+		if (JSON.stringify(prevQueryRef.current) !== JSON.stringify(query)) {
+			prevQueryRef.current = query
+			const params = buildSearchParams(query)
+			router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+		}
 	}, [query, router, pathname])
 }

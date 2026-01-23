@@ -45,5 +45,4 @@ Tasks list with filters / sorting
 
 
 ### Fixes
-- [ ] Multiple requests once d-n-d
-- [ ] If we are on 3d page and change filter and last page possible is 2nd
+- [ ] If a user manually type 'desc' when mode=manual and we get desc order and change the order - the order changes wront

@@ -6,6 +6,8 @@ import {
 	SetStateAction,
 	useCallback,
 	useContext,
+	useEffect,
+	useMemo,
 	useState,
 	useTransition,
 } from 'react'
@@ -56,30 +58,17 @@ export const TasksContext = createContext<ITasksContext>({
 	isPending: true,
 })
 
-export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
-	// const router = useRouter()
-	// const pathname = usePathname()
-
-	const [tasks, setTasks] = useState<ITask[] | null>(null)
-	const [isPending, startTransition] = useTransition()
-
-	const [pagination, setPagination] = useState<{
-		total: number
-		limit: number
-		page: number
-		pages: number
-	}>({ total: 0, limit: 5, page: 0, pages: 0 })
-
-	const params = useSearchParams()
+function getQueryFromParams(params: URLSearchParams): TasksQuery {
 	const currentPage = params.get('page') ? parseInt(params.get('page')!, 10) : 1
 	const completedFilter = params.get('completed')
 	const priorityFilter = params.get('priority')
 	const sortQuery = params.get('sort')
 	const orderQuery = params.get('order')
 	const modeQuery = params.get('mode')
-	const [query, setQuery] = useState<TasksQuery>({
+
+	return {
 		page: currentPage,
-		limit: pagination.limit,
+		limit: 5,
 		completed:
 			completedFilter === 'true'
 				? true
@@ -87,9 +76,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 					? false
 					: undefined,
 		priority:
-			priorityFilter === 'low' ||
-			priorityFilter === 'medium' ||
-			priorityFilter === 'high'
+			priorityFilter === '1' || priorityFilter === '2' || priorityFilter === '3'
 				? priorityFilter
 				: undefined,
 		sort:
@@ -102,40 +89,78 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 		order:
 			orderQuery === 'asc' || orderQuery === 'desc' ? orderQuery : undefined,
 		mode: modeQuery === 'manual' ? 'manual' : 'auto',
-	})
+	}
+}
 
-	const fetchTasks = useCallback(async () => {
-		try {
-			const { pagination, data } = await getTasks({ ...query })
+export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
+	const params = useSearchParams()
+	const router = useRouter()
+	const pathname = usePathname()
+	const [tasks, setTasks] = useState<ITask[] | null>(null)
+	const [isPending, startTransition] = useTransition()
+	const [pagination, setPagination] = useState<{
+		total: number
+		limit: number
+		page: number
+		pages: number
+	}>({ total: 0, limit: 5, page: 0, pages: 0 })
 
-			/** Correct the page */
-			// const maxPage = Math.ceil(Number(pagination.total) / pagination.limit)
-			// const isMaxPageLessThanCurrentPage = maxPage < pagination.page
-			// console.log('isMaxPageLessThanCurrentPage', isMaxPageLessThanCurrentPage)
-			// console.log('maxPage', maxPage, 'currentPage', pagination.page)
+	const query = useMemo(() => getQueryFromParams(params), [params])
 
-			// if (isMaxPageLessThanCurrentPage) {
-			// 	router.push(
-			// 		`${pathname}${query.mode !== 'manual' ? `?page=${maxPage}` : ''}`,
-			// 	)
-			// 	return
-			// }
-			//** / Correct the page */
+	const setQuery = useCallback(
+		(newQueryOrFn: TasksQuery | ((prev: TasksQuery) => TasksQuery)) => {
+			let newQuery: TasksQuery
 
-			setPagination(pagination)
-			setTasks(data)
-		} catch {}
-	}, [
-		query,
-		// router,
-		// pathname
-	])
+			if (typeof newQueryOrFn === 'function') {
+				newQuery = newQueryOrFn(query)
+			} else {
+				newQuery = newQueryOrFn
+			}
+
+			// Обновляем URL, что автоматически обновит query через params
+			const searchParams = new URLSearchParams()
+
+			if (newQuery.completed !== undefined)
+				searchParams.set('completed', String(newQuery.completed))
+
+			if (newQuery.page) searchParams.set('page', String(newQuery.page))
+
+			if (newQuery.sort) searchParams.set('sort', newQuery.sort)
+
+			if (newQuery.order) searchParams.set('order', newQuery.order)
+
+			if (newQuery.priority) searchParams.set('priority', newQuery.priority)
+
+			if (newQuery.mode && newQuery.mode !== 'auto') {
+				searchParams.set('mode', newQuery.mode)
+			}
+
+			router.replace(`${pathname}?${searchParams.toString()}`, {
+				scroll: false,
+			})
+		},
+		[query, router, pathname],
+	)
+
+	useEffect(() => {
+		startTransition(async () => {
+			try {
+				const { pagination, data } = await getTasks({ ...query })
+				setPagination(pagination)
+				setTasks(data)
+			} catch {}
+		})
+	}, [query])
 
 	const refetchTasks = useCallback(() => {
 		startTransition(async () => {
-			await fetchTasks()
+			try {
+				const { pagination, data } = await getTasks({ ...query })
+				setPagination(pagination)
+				setTasks(data)
+			} catch {}
 		})
-	}, [fetchTasks])
+	}, [query])
 
 	return (
 		<TasksContext
