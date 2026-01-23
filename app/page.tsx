@@ -23,7 +23,7 @@ export default function Home() {
 		<>
 			<H1>
 				Tasks
-				<Button variant='ghost' asChild>
+				<Button variant='secondary' asChild className='py-2 h-auto'>
 					<Link href={`/tasks/create`}>
 						<PlusIcon className='size-8' />
 					</Link>

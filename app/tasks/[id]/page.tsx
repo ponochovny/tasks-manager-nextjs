@@ -51,7 +51,7 @@ const TaskPage = () => {
 	}
 
 	return (
-		<div className='space-y-6'>
+		<div className='space-y-6 md:w-auto w-full'>
 			{task && (
 				<div className='space-y-2'>
 					<TaskInfo

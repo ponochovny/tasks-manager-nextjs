@@ -192,7 +192,9 @@ function TaskForm({
 						</FormItem>
 					)}
 				/>
-				<Button type='submit'>Submit</Button>
+				<Button type='submit' className='md:w-auto w-full'>
+					Submit
+				</Button>
 			</form>
 		</Form>
 	)

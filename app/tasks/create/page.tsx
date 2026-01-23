@@ -28,12 +28,12 @@ const CreateTask = () => {
 				loading: 'Loading...',
 				success: () => `Task created successfully`,
 				error: 'Error',
-			}
+			},
 		)
 	}
 
 	return (
-		<div className='space-y-6'>
+		<div className='space-y-6 md:w-auto w-full'>
 			<H1>Create Task</H1>
 			<TaskForm submitted={handleCreate} />
 		</div>

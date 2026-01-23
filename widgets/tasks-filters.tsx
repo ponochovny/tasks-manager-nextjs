@@ -47,7 +47,7 @@ const TasksFilters = () => {
 	}
 
 	return (
-		<div className='mb-4 flex gap-4'>
+		<div className='mb-4 flex flex-wrap gap-4'>
 			<div className='flex items-center'>
 				<CompletedSelect
 					value={query.completed !== undefined ? String(query.completed) : ''}

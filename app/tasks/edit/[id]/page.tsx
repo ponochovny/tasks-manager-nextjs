@@ -63,7 +63,7 @@ const EditTask = () => {
 				loading: 'Loading...',
 				success: () => `Task edited successfully`,
 				error: 'Error',
-			}
+			},
 		)
 	}
 
@@ -89,7 +89,7 @@ const EditTask = () => {
 	}
 
 	return (
-		<div className='space-y-6'>
+		<div className='space-y-6 md:w-auto w-full'>
 			<H1>Edit Task</H1>
 			<TaskForm data={task} submitted={handleEdit} />
 		</div>

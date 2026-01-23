@@ -5,6 +5,9 @@ import { TasksProvider } from '@/app/providers/tasks-provider'
 import { ThemeProvider } from '@/app/providers/theme-provider'
 import { ModeToggle } from '@/shared/ui/theme-toggle'
 import { Toaster } from '@/shared/ui/sonner'
+import { Button } from '@/shared/ui/button'
+import { HomeIcon } from 'lucide-react'
+import Link from 'next/link'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -33,14 +36,19 @@ export default function RootLayout({
 				suppressHydrationWarning
 			>
 				<div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-					<main className='flex min-h-screen w-full flex-col items-center  py-24 px-16 bg-zinc-200 dark:bg-black sm:items-start'>
+					<main className='flex min-h-screen w-full flex-col items-center  md:py-24 md:px-16 px-4 py-8 bg-zinc-200 dark:bg-black sm:items-start'>
 						<ThemeProvider
 							attribute='class'
 							defaultTheme='system'
 							enableSystem
 							disableTransitionOnChange
 						>
-							<div className='absolute top-6 right-6'>
+							<div className='absolute top-6 right-6 flex gap-1 sm:flex-row flex-col'>
+								<Button variant='outline' size='icon' asChild>
+									<Link href='/'>
+										<HomeIcon className='h-4 w-4' />
+									</Link>
+								</Button>
 								<ModeToggle />
 							</div>
 							<TasksProvider>{children}</TasksProvider>

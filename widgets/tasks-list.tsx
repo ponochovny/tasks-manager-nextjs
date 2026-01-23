@@ -59,27 +59,29 @@ const TasksList = () => {
 			{tasks.map((task) => (
 				<Item variant='outline' size='sm' asChild key={task.id}>
 					<div className='flex items-center justify-between w-full'>
-						<ItemMedia>
+						<ItemMedia className=' md:m-0 -ml-2'>
 							<ToggleTaskCompleteButton
 								task={task}
 								updatedTaskHandler={updatedTaskHandler}
 							/>
 						</ItemMedia>
-						<ItemContent className='items-start'>
-							<Link href={`/tasks/${task.id}`} className='inline-block'>
-								<ItemTitle>{task.title}</ItemTitle>
-							</Link>
-							<ItemTitle className='text-sm text-gray-500'>
-								<HumanDate date={task.date_completed} />
-							</ItemTitle>
-						</ItemContent>
-						<ItemActions>
+						<ItemContent className='md:flex-row flex-col gap-2 md:items-center md:justify-between'>
+							<div className='flex flex-col gap-1'>
+								<Link href={`/tasks/${task.id}`} className='inline-block'>
+									<ItemTitle>{task.title}</ItemTitle>
+								</Link>
+								<ItemTitle className='text-sm text-gray-500'>
+									<HumanDate date={task.date_completed} />
+								</ItemTitle>
+							</div>
 							<PrioritySelect
 								value={task.priority.toString()}
 								valueChanged={(value) =>
 									handleTaskPriorityChange(task.id, value)
 								}
 							/>
+						</ItemContent>
+						<ItemActions className='md:flex-row flex-col items-stretch'>
 							<EditTaskButton taskId={task.id} />
 							<DeleteTaskButton taskId={task.id} />
 						</ItemActions>
